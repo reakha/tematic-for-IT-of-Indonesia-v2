@@ -445,7 +445,7 @@
 
 	function tambahtema($nama_tema, $connect)
 		{
-			$result = $connect->query("INSERT INTO tema (nama_tema) 
+			$result = $connect->query("ALTER TABLE tema AUTO_INCREMENT = 0;  INSERT INTO tema (nama_tema) 
 						VALUES('$nama_t')");
 			// echo "<pre>";
 			// print_r($nama_tema);
