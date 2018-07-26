@@ -297,3 +297,87 @@
 	</form>
 </body>
 </html>
+
+<div class="in">	
+			<label>Id :</label>
+			<input class="id" 
+				   type="text" 
+				   name="id"
+				   value="<?php echo $i; ?>"
+				   placeholder="Masukkan Id">
+			<label>Judul :</label>
+			<input class="judul" 
+			       type="text" 
+			       name="judul"
+			       value="<?php echo $j; ?>" 
+			       placeholder="Masukkan Judul Skripsi">
+			<label>Abstrak :</label>
+		</div>
+		<div class="ab">
+			<textarea class="abstrak" 
+					  name="abstrak[]"
+					  value="<?php echo $a; ?>" 
+					  placeholder="Masukkan Abstrak untuk memilih Tema & masukkan Abstrak lagi setelah memilih Tema untuk Submit" ></textarea>
+			<br>
+				<input class="proses" type="submit" name="proses" value="Proses Tema">
+
+				<?php
+										
+					if(isset($_POST['proses']))
+					{		
+						$as = $_POST['abstrak'];
+						$c = p($as,$at,$kata_hubung,$kata_dasar,$id_tema,$nama_tema);
+						
+						echo "<label>Pilih Tema :</label></br>";
+						// print_r($cc);
+							foreach ($c as $key => $value) 
+							{
+								foreach ($value as $key1 => $value1) 
+								{
+									$value1 = round($value1*100);	
+									echo 
+									"<input type=radio
+			       							name=tema
+			      							value=".$key.">".$key1." = ".$value1."</br>"; 
+								}
+							}
+					}
+				?>
+		</div>
+		<div class="sub">
+			<input class="submit" type="submit" name="submitskripsi" value="Submit" >
+		</div>
+				<?php
+					if (isset($_POST['submitskripsi']))
+					{
+						$id_skripsi = $i;
+						$judul = $j;
+						$abstrak = '';
+						foreach($a as $key => $value) 
+						{
+							$abstrak = $value;
+						}
+						$id_tema = $t;
+							
+							if(empty($id_skripsi))
+							{
+						    	echo '<script>alert("ID belum diisi")</script>';
+						    }
+						    else if (empty($judul))
+						    {
+						    	echo '<script>alert("Judul belum diisi")</script>';
+						    }
+						    else if (empty($abstrak))
+						    {
+						    	echo '<script>alert("Abstrak belum diisi")</script>';
+						    }
+						    else if (empty($id_tema))
+						    {
+						    	echo '<script>alert("Tema belum dipilih")</script>';
+						    }
+						    else 
+						    { 
+						    	sent_skripsi($id_skripsi, $judul, $abstrak, $id_tema, $connect);
+						    }
+					}
+				?>		

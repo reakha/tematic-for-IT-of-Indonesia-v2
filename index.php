@@ -5,8 +5,6 @@
 	$j = isset($_POST['judul'])?$_POST['judul']:''; 
 	$a = isset($_POST['abstrak'])?$_POST['abstrak']:''; 
 	$t = isset($_POST['tema'])?$_POST['tema']:''; 
-	//$n = isset($_POST['tambahtema'])?$_POST['tambahtema']:''; 
-	//$k = isset($_POST['tambahkeyword'])?$_POST['tambahkeyword']:''; 
 ?>
 <!DOCTYPE html>
 <html>
@@ -130,7 +128,7 @@
 </head>
 <body>
 	<form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-		<div class="in">	
+<div class="in">	
 			<label>Id :</label>
 			<input class="id" 
 				   type="text" 
@@ -217,21 +215,49 @@
 <br>
 		<div class="in">
 			<label>Tambah Tema :</label>
-			<input class="id" 
-					   type="text" 
-					   name="tambahtema"
-					   value="<?php $n; ?>"
-					   placeholder="Masukkan nama tema">
+			<input class="judul" 
+				   type="text" 
+				   name="tambahtema"
+				   value="<?php $n; ?>"
+				   placeholder="Masukkan nama tema">
 		</div>
 		<div class="sub">
-			<input class="submit" type="submit" name="tambahtema" value="Tambah" >
+			<input class="submit" type="submit" name="submittambahtema" value="Tambah" >
 		</div>
+				<?php
+
+					if (isset($_POST['submittambahtema']))
+					{
+						$nama_t = $_POST['tambahtema'];
+
+							if(empty($nama_t))
+							{
+								echo '<script>alert("Nama tema belum diisi")</script>';
+						    }
+						    else 
+						    {
+						    	$check = $connect->query("select nama_tema from tema where nama_tema='$nama_t'");
+    							$checkrows = mysqli_num_rows($check);
+						    	//print_r($check);
+								if ($checkrows>0) 
+								{
+									echo '<script>alert("Penambahan tema gagal atau nama tema sudah ada")</script>';
+								} 
+								else 
+								{
+									//$connect->query("SELECT nama_tema FROM tema")->num_rows != $nama_t;
+									$result = $connect->query("INSERT INTO tema (nama_tema) VALUES('$nama_t')"); 
+									echo '<script>alert("Penambahan tema sukses!")</script>';
+								}
+						    }
+					}
+				?>
 <br>
 <br>
 		<div class="in">
 			<label>Tambah Keyword :</label>
 				<?php
-							echo "<select name = tambahkeyword > Pilih Tema ";
+							echo "<select name = pilihtema > Pilih Tema ";
 								foreach ($idt_nt as $key => $value) 
 								{
 									echo "<option value=".$key.">".$value."</option>";
@@ -240,7 +266,7 @@
 				?>
 		</div>
 		<div class="sub">
-				<input class="submit" type="submit" name="tambahkeyword" value="Tambah" >
+				<input class="submit" type="submit" name="submittambahkeyword" value="Tambah" >
 		</div>
 		<div class="ab">
 				<?php 
@@ -252,43 +278,47 @@
 									{
 										echo 
 										"<input type=checkbox
-					       						name=tema
-					      						value=".$key.">".$value2.""; 
+					       						name=pilihkeyword
+					      						value=".$value2.">".$value2.""; 
 									}	
 								}
 							}
 				?>
 		</div>
-				<?php
-					
-					// elseif (isset($_POST['tambahtema']))
-					// {
-					// 	$nama_t = $n;
-					// 	//echo $n;
+				<?php	
 
-					// 		if(empty($nama_t))
-					// 		{
-					// 	    	echo '<script>alert("Nama tema belum diisi")</script>';
-					// 	    }
-					// 	    else 
-					// 	    { 
-					// 	    	tambahtema($nama_t, $connect);
-					// 	    }
-					// }
-					// elseif (isset($_POST['tambahkeyword']))
-					// {
-					// 	$nama_tem = $n;
-					// 	//echo $n;
+					if (isset($_POST['submittambahkeyword']))
+					{
+						$pilihtema = $_POST['pilihtema'];
+						$pilihkeyword = $_POST['pilihkeyword'];
+						
 
-					// 		if(empty($nama_tem))
-					// 		{
-					// 	    	echo '<script>alert("Nama tema belum diisi")</script>';
-					// 	    }
-					// 	    else 
-					// 	    { 
-					// 	    	//tambahtema($nama_tem, $connect);
-					// 	    }
-					// }
+							if(empty($pilihtema))
+							{
+						    	echo '<script>alert("Nama tema belum dipilih")</script>';
+						    }
+						    elseif (empty($pilihkeyword)) 
+						    {
+						    	echo '<script>alert("Keyword belum dipilih")</script>';
+						    }
+						    else 
+						    { 
+						    	$check = $connect->query("select keyword from keyword where id_tema='$pilihtema' && keyword='$pilihkeyword'");
+    							$checkrows = mysqli_num_rows($check);
+
+    							if ($checkrows>0) 
+								{
+									echo '<script>alert("Penambahan keyword gagal atau keyword sudah ada dalah tema")</script>';
+								}
+								else 
+								{
+
+									$result = $connect->query("INSERT INTO keyword (id_tema, keyword) 
+																			VALUES('$pilihtema', '$pilihkeyword')"); 
+									echo '<script>alert("Penambahan keyword sukses")</script>';
+								}
+						    }
+					}
 				
 				?>	
 	</form>
